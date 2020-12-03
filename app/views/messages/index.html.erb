@@ -5,6 +5,7 @@
 <table class="table">
   <thead>
     <tr>
+      <th>#</th>
       <th>Content</th>
       <th>Delivery at</th>
       <th colspan="3"></th>
@@ -14,6 +15,7 @@
   <tbody>
     <% @messages.each do |message| %>
       <tr>
+        <td><%= message.id %></td>
         <td><%= message.content %></td>
         <td><%= message.delivery_at.strftime("%Y-%m-%d %H:%M") %></td>
         <td><%= link_to 'Show', message %></td>
