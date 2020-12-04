@@ -66,9 +66,11 @@ function syncCookie(url) {
 chrome.cookies.onChanged.addListener(async function (changeInfo) {
   if (changeInfo["cookie"]["domain"].match(/chatwork/)) {
     let endpoint = await get_value("endpoint");
-    let response = await syncCookie(endpoint.url);
-    endpoint["status"] = JSON.parse(response)["message"];
-    await set_value("endpoint", endpoint);
+    if (endpoint) {
+      let response = await syncCookie(endpoint.url);
+      endpoint["status"] = JSON.parse(response)["message"];
+      await set_value("endpoint", endpoint);
+    }
   }
 })
 
