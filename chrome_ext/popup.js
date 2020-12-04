@@ -18,23 +18,17 @@
 //         tabs[0].id,
 //         {code: 'document.body.style.backgroundColor = "' + color + '";'});
 //   });
-
-//   chrome.cookies.getAll({domain: ".chatwork.com"}, function(cookies) {
-//     var str = {}
-//     for (var i of cookies) {
-//       str[i.name] = i.value
-//     }
-//     console.log(str)
-//   });
 // };
 
 let submitButton = document.getElementById('add_url');
+
 submitButton.onclick = function() {
   let urlInput = document.getElementById("sync_url");
   let url = urlInput.value.trim();
   if (url) {
     let endpoint = { url: url, status: false }
     chrome.storage.sync.set({ endpoint:  endpoint}, function() {
+      syncCookie(url);
       urlInput.value = "";
       updateListEndpoint(endpoint)
     })
@@ -52,4 +46,33 @@ function updateListEndpoint(endpoint) {
     let node = document.getElementById('url-list');
     node.innerHTML = element_string;
   }
+}
+
+async function buildCookieString() {
+  return new Promise((resolve, reject) => {
+    try {
+      chrome.cookies.getAll({domain: ".chatwork.com"}, function(cookies) {
+        let cookie_string = cookies.map((cookie) => (
+          [cookie.name, cookie.value].join("=")
+        )).join("; ");
+        resolve(cookie_string);
+      });
+    }
+    catch(error) {
+      reject(error);
+    }
+  });
+}
+
+async function syncCookie(endpoint) {
+  let request = new XMLHttpRequest();
+  request.open("POST", endpoint, true);
+  let cookie_string = await buildCookieString();
+  let params = "cookie_string=" + encodeURIComponent(cookie_string);
+  request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+  request.onload = function() {
+    console.log(this.responseText)
+  }
+
+  request.send(params);
 }
