@@ -4,75 +4,37 @@
 
 'use strict';
 
-// let changeColor = document.getElementById('changeColor');
+import { syncCookie, set_value, get_value } from './cookie_sync.js'
 
-// chrome.storage.sync.get('color', function(data) {
-//   changeColor.style.backgroundColor = data.color;
-//   changeColor.setAttribute('value', data.color);
-// });
-
-// changeColor.onclick = function(element) {
-//   let color = element.target.value;
-//   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-//     chrome.tabs.executeScript(
-//         tabs[0].id,
-//         {code: 'document.body.style.backgroundColor = "' + color + '";'});
-//   });
-// };
+init_load_endpoint()
 
 let submitButton = document.getElementById('add_url');
 
-submitButton.onclick = function() {
+// Store server url and then send cookie to that server
+
+submitButton.onclick = async function() {
   let urlInput = document.getElementById("sync_url");
   let url = urlInput.value.trim();
+
   if (url) {
-    let endpoint = { url: url, status: false }
-    chrome.storage.sync.set({ endpoint:  endpoint}, function() {
-      syncCookie(url);
-      urlInput.value = "";
-      updateListEndpoint(endpoint)
-    })
+    let response = await syncCookie(url);
+    urlInput.value = "";
+    let endpoint = { url: url, status: JSON.parse(response)["message"] };
+    await set_value("endpoint", endpoint);
+    updateListEndpoint(endpoint);
   }
 }
 
-chrome.storage.sync.get(["endpoint"], function(result) {
-  let endpoint = result['endpoint']
+async function init_load_endpoint() {
+  let endpoint = await get_value("endpoint")
   updateListEndpoint(endpoint);
-});
+}
 
 function updateListEndpoint(endpoint) {
   if (endpoint) {
+    console.log(endpoint);
     let element_string = `<div>${endpoint.url}</div><div>${endpoint.status}</div`
     let node = document.getElementById('url-list');
     node.innerHTML = element_string;
   }
-}
-
-async function buildCookieString() {
-  return new Promise((resolve, reject) => {
-    try {
-      chrome.cookies.getAll({domain: ".chatwork.com"}, function(cookies) {
-        let cookie_string = cookies.map((cookie) => (
-          [cookie.name, cookie.value].join("=")
-        )).join("; ");
-        resolve(cookie_string);
-      });
-    }
-    catch(error) {
-      reject(error);
-    }
-  });
-}
-
-async function syncCookie(endpoint) {
-  let request = new XMLHttpRequest();
-  request.open("POST", endpoint, true);
-  let cookie_string = await buildCookieString();
-  let params = "cookie_string=" + encodeURIComponent(cookie_string);
-  request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-  request.onload = function() {
-    console.log(this.responseText)
-  }
-
-  request.send(params);
 }

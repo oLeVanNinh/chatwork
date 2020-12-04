@@ -15,6 +15,8 @@
 
 /config/database.yml
 
+/chrome_ext/node_modules/*
+
 # Ignore uploaded files in development
 /storage/*
 !/storage/.keep
