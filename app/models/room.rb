@@ -10,4 +10,5 @@
 #  room_id    :string
 #
 class Room < ApplicationRecord
+  belongs_to :message
 end

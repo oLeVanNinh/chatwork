@@ -18,6 +18,8 @@
 #  fk_rails_...  (room_id => rooms.id)
 #
 class Message < ApplicationRecord
+  has_one :room
+
   validates :content, presence: true
   validates :delivery_at, presence: true
 end
