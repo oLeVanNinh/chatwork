@@ -7,6 +7,10 @@ module.exports = {
     background: './src/js/background.js'
   },
 
+  optimization: {
+    minimize: false
+  },
+
   output: {
     path: path.resolve(__dirname, 'src', 'dist'),
     filename: '[name].js'

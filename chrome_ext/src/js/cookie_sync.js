@@ -50,9 +50,16 @@ function syncCookie(url) {
       let cookie_string = await buildCookieString();
       let params = "cookie_string=" + encodeURIComponent(cookie_string);
       request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-      request.onload = function() {
-        let response = this.responseText;
-        resolve(response)
+      request.onreadystatechange = function(event) {
+        if (request.readyState === 4) {
+          if (request.status == 200) {
+            resolve(request.responseText);
+          }
+          else {
+            let error = { "message": "Error" };
+            resolve(JSON.stringify(error))
+          }
+        }
       }
 
       request.send(params);
