@@ -8,6 +8,7 @@
 #  status      :integer          default("unsent")
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  job_id      :string
 #  room_id     :bigint
 #
 # Indexes

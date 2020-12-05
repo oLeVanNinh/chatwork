@@ -28,7 +28,8 @@ class MessagesController < ApplicationController
 
     respond_to do |format|
       if @message.save
-        ::MessageScheduleWorker.perform_at(@message.delivery_at, @message.id)
+        job_id = ::MessageScheduleWorker.perform_at(@message.delivery_at, @message.id)
+        @message.update(job_id: job_id)
         format.html { redirect_to @message, notice: 'Message was successfully created.' }
         format.json { render :show, status: :created, location: @message }
       else

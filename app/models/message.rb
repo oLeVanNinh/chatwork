@@ -8,6 +8,7 @@
 #  status      :integer          default("unsent")
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  job_id      :string
 #  room_id     :bigint
 #
 # Indexes
@@ -27,4 +28,13 @@ class Message < ApplicationRecord
   validates :delivery_at, presence: true
 
   enumerize :status, in: { unsent: 0, sended: 1, fail: 2 }
+
+  before_destroy :destroy_job_schedule
+
+  private
+
+  def destroy_job_schedule
+    jobs = Sidekiq::ScheduledSet.new.select { |schuled| schuled.jid == job_id }
+    jobs.each(&:delete)
+  end
 end
