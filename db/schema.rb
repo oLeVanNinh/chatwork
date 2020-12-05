@@ -28,6 +28,7 @@ ActiveRecord::Schema.define(version: 2020_12_04_101001) do
     t.string "name"
     t.string "room_id"
     t.string "avatar"
+    t.integer "room_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

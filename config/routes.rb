@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :rooms
   root "messages#index"
   resources :messages
   post :update_cookie, to: "cookies#update"

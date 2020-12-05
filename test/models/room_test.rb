@@ -5,6 +5,7 @@
 #  id         :bigint           not null, primary key
 #  avatar     :string
 #  name       :string
+#  room_type  :integer
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  room_id    :string

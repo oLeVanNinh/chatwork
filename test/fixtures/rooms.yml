@@ -5,6 +5,7 @@
 #  id         :bigint           not null, primary key
 #  avatar     :string
 #  name       :string
+#  room_type  :integer
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  room_id    :string
@@ -14,8 +15,10 @@ one:
   name: MyString
   room_id: MyString
   avatar: MyString
+  room_type: 1
 
 two:
   name: MyString
   room_id: MyString
   avatar: MyString
+  room_type: 1
