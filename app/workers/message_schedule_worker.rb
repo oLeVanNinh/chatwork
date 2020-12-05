@@ -6,7 +6,8 @@ class MessageScheduleWorker
 
     return unless message
     response = Service::Chatwork.send_message(message.content, message.room.room_id)
-    status = response.code == 200 ? Message.status.sended : Message.status.fail
+    status =  Message.status.fail
+    status = Message.status.sended if response.code == 200 && response.parsed_response.is_a?(Hash) && response.parsed_response["status"]["success"] == true
     message.update(status: status)
   end
 end
