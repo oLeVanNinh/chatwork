@@ -24,10 +24,11 @@ class MessagesController < ApplicationController
   # POST /messages
   # POST /messages.json
   def create
-    @message = Message.new(message_params)
+    @message = Message.new(message_params.merge(room_id: params[:rooms][:room_id]))
 
     respond_to do |format|
       if @message.save
+        ::MessageScheduleWorker.perform_at(@message.delivery_at, @message.id)
         format.html { redirect_to @message, notice: 'Message was successfully created.' }
         format.json { render :show, status: :created, location: @message }
       else

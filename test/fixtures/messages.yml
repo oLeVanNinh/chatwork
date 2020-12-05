@@ -5,6 +5,7 @@
 #  id          :bigint           not null, primary key
 #  content     :text
 #  delivery_at :datetime
+#  status      :integer          default("unsent")
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #  room_id     :bigint

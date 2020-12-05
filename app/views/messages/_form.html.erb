@@ -21,6 +21,11 @@
     <%= form.datetime_select :delivery_at %>
   </div>
 
+  <div class="field form-group room-field">
+    <%= form.label :room_id %>
+    <%= collection_select(:rooms, :room_id, Room.all, :id, :name, {}, { class: "form-control" })%>
+  </div>
+
   <div class="actions ">
     <%= form.submit %>
   </div>

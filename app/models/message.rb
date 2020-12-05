@@ -5,6 +5,7 @@
 #  id          :bigint           not null, primary key
 #  content     :text
 #  delivery_at :datetime
+#  status      :integer          default("unsent")
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #  room_id     :bigint
@@ -18,8 +19,12 @@
 #  fk_rails_...  (room_id => rooms.id)
 #
 class Message < ApplicationRecord
-  has_one :room
+  extend Enumerize
+
+  belongs_to :room
 
   validates :content, presence: true
   validates :delivery_at, presence: true
+
+  enumerize :status, in: { unsent: 0, sended: 1, fail: 2 }
 end
