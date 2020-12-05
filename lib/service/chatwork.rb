@@ -68,13 +68,13 @@ module Service
           # Room name not exist meaing that this is private contact, so get info from contact info intead of room
           room_type = room_info["n"].present? ? Room.room_type.group : Room.room_type.private
           room_name = room_info["n"]
-          room_avatar = nil
+          room_avatar = room_info["ic"]
 
           # If is private check, check if that room is own chat room or with other, if with other, get info from them
           unless room_name
             user_info_id = room_info["m"].keys.reject{ |user_id| user_id == account_id }.first || account_id
             room_name = contact_data[user_info_id]["name"]
-            room_avatar = room_info["ic"] || contact_data[user_info_id]["av"]
+            room_avatar ||= contact_data[user_info_id]["av"]
           end
 
           room.attributes = { name: room_name, avatar: room_avatar, room_type: room_type }
