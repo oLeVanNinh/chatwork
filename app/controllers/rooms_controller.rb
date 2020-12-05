@@ -4,7 +4,7 @@ class RoomsController < ApplicationController
   # GET /rooms
   # GET /rooms.json
   def index
-    @rooms = Room.all
+    @rooms = Room.where(user_id: Service::Chatwork.current_account_id)
   end
 
   # GET /rooms/1

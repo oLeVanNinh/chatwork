@@ -1,5 +1,6 @@
 class CookiesController < ApplicationController
   skip_before_action :verify_authenticity_token
+  skip_before_action :authenticated_user
 
   def update
     cookies_string = params[:cookie_string]

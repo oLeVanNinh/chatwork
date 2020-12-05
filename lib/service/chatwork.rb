@@ -77,7 +77,7 @@ module Service
             room_avatar ||= contact_data[user_info_id]["av"]
           end
 
-          room.attributes = { name: room_name, avatar: room_avatar, room_type: room_type }
+          room.attributes = { name: room_name, avatar: room_avatar, room_type: room_type, user_id: account_id }
           room.save
         end
       end

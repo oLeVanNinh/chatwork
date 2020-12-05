@@ -23,7 +23,7 @@
 
   <div class="field form-group room-field">
     <%= form.label :room_id %>
-    <%= collection_select(:rooms, :room_id, Room.all, :id, :name, {}, { class: "form-control" })%>
+    <%= collection_select(:rooms, :room_id, Room.all.where(user_id: Service::Chatwork.current_account_id), :id, :name, {}, { class: "form-control" })%>
   </div>
 
   <div class="actions ">
