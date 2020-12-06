@@ -2,7 +2,7 @@
 
 <h1>Messages</h1>
 
-<table class="table">
+<table class="table table-bordered">
   <thead>
     <tr>
       <th>#</th>
@@ -10,7 +10,7 @@
       <th>Deivery to</th>
       <th>Delivery at</th>
       <th>Status </th>
-      <th colspan="2"></th>
+      <th colspan="1"></th>
     </tr>
   </thead>
 
@@ -22,8 +22,7 @@
          <td><%= message.room.name %></td>
         <td><%= message.delivery_at.strftime("%Y-%m-%d %H:%M") %></td>
         <td><%= message.status %></td>
-        <td><%= link_to 'Edit', edit_message_path(message) %></td>
-        <td><%= link_to 'Destroy', message, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td class="button-delete"><%= button_to 'Destroy', message, method: :delete, class: "btn btn-danger", data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
@@ -31,4 +30,4 @@
 
 <br>
 
-<%= link_to 'New Message', new_message_path %>
+<%= button_to 'New Message', new_message_path, method: :get, class: "btn btn-info" %>
