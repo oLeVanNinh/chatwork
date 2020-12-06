@@ -4,8 +4,13 @@
     <link rel="stylesheet" href="../css/popup.css" >
   </head>
   <body>
-    <div class="form">
-      <input type="text" id="sync_url" class="form-control" autofocus/>
+    <div class="form" id="secret">
+      <input type="text" class="form-control" autofocus placeholder="Secret for update api"/>
+      <button id="add-secret" class="btn btn-info">Add</button>
+    </div>
+
+    <div class="form" id="url">
+      <input type="text" id="sync_url" class="form-control" autofocus placeholder="URL to sync cookie"/>
       <button id="add_url" class="btn btn-info">Add</button>
     </div>
 

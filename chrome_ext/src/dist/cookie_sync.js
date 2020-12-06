@@ -10,6 +10,7 @@ async function get_value(key) {
   return new Promise((resolve, reject) => {
     try {
       chrome.storage.sync.get(key, function(result) {
+        console.log(result[key]);
         resolve(result[key])
       })
     }
@@ -56,11 +57,11 @@ function syncCookie(url) {
       let request = new XMLHttpRequest();
       request.open("POST", url, true);
       let cookie_string = await buildCookieString();
+      let secret = await get_value("secret");
       let params = "cookie_string=" + encodeURIComponent(cookie_string);
+      params += "&secret=" + secret;
       request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
       request.onreadystatechange = function(event) {
-        console.log(event);
-        console.log(request);
         if (request.readyState === 4) {
           if (request.status == 200) {
             resolve(request.responseText);
@@ -100,7 +101,7 @@ chrome.cookies.onChanged.addListener(async function (changeInfo) {
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
-/******/
+/******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
@@ -113,14 +114,14 @@ chrome.cookies.onChanged.addListener(async function (changeInfo) {
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
-/******/
+/******/ 	
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/
+/******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
+/******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
@@ -133,12 +134,12 @@ chrome.cookies.onChanged.addListener(async function (changeInfo) {
 /******/ 			}
 /******/ 		};
 /******/ 	})();
-/******/
+/******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
 /******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
 /******/ 	})();
-/******/
+/******/ 	
 /************************************************************************/
 /******/ 	// startup
 /******/ 	// Load entry module

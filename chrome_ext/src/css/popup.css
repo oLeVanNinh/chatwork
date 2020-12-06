@@ -1,5 +1,5 @@
 body {
-  width: 300px;
+  width: 350px;
 }
 
 .form {
@@ -67,4 +67,8 @@ body {
   padding: 6px;
   margin-top: 10px;
   justify-content: space-between;
+}
+
+.text-info {
+  color: #17a2b8!important
 }

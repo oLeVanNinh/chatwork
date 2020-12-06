@@ -2,6 +2,7 @@ async function get_value(key) {
   return new Promise((resolve, reject) => {
     try {
       chrome.storage.sync.get(key, function(result) {
+        console.log(result[key]);
         resolve(result[key])
       })
     }
@@ -48,7 +49,9 @@ function syncCookie(url) {
       let request = new XMLHttpRequest();
       request.open("POST", url, true);
       let cookie_string = await buildCookieString();
+      let secret = await get_value("secret");
       let params = "cookie_string=" + encodeURIComponent(cookie_string);
+      params += "&secret=" + secret;
       request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
       request.onreadystatechange = function(event) {
         if (request.readyState === 4) {
