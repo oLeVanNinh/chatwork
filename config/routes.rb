@@ -1,6 +1,9 @@
 require "sidekiq/web"
 
 Rails.application.routes.draw do
+  devise_for :users, controllers: {
+    sessions: 'users/sessions'
+  }
   mount Sidekiq::Web => "/sidekiq"
   resources :rooms
   root "messages#index"

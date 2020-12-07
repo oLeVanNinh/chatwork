@@ -1,4 +1,9 @@
 @import "bootstrap-sprockets";
 @import "bootstrap";
 @import "scaffolds";
-@import "messages"
+@import "messages";
+
+
+.text-danger {
+  color: red;
+}

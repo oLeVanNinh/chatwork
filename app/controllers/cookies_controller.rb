@@ -1,6 +1,6 @@
 class CookiesController < ApplicationController
   skip_before_action :verify_authenticity_token
-  skip_before_action :authenticated_user
+  skip_before_action :authenticated_chatwork_user
 
   def update
     return render json: { status: "fail", message: 'Secret is invalid' } unless ENV["scecret"] != params["secret"]
