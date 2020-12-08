@@ -40,7 +40,7 @@ class Message < ApplicationRecord
   end
 
   def deliver_time_in_the_future
-    return if delivery_at > Time.now
+    return if delivery_at > Time.now || (persisted? && !delivery_at_changed?)
     errors.add(:delivery_at, "Date cannot set in the past")
   end
 end
