@@ -11,7 +11,7 @@ class MessageScheduleWorker
       status = Message.status.sended if response.code == 200 && response.parsed_response.is_a?(Hash) && response.parsed_response["status"]["success"] == true
       message.update!(status: status)
     rescue StandardError => e
-      Rails.logger.errors e.message
+      Rails.logger.error e.message
     end
   end
 end
