@@ -1,7 +1,7 @@
 namespace :scheduler do
   desc "Take for send message schuled every time to replace for sidekiq worker because worker dyno off if no traffic to web dyno"
   task :send_message, [:cron_period] => [:environment] do |task, args|
-    args[:cron_period].to_i.times do
+    args[:cron_period].to_i.times do |i|
       start_time = Time.now
       puts "Task running at #{start_time.to_s}"
       puts args
@@ -27,7 +27,8 @@ namespace :scheduler do
 
       remainning = Time.now.end_of_minute - start_time if Time.now.strftime("%M") == start_time.strftime("%M")
       puts "Waiting for new in task #{remainning} seconds"
-      sleep(remainning) if remainning && remainning > 0
+      puts "End task at #{Time.now.to_s}"
+      sleep(remainning) if remainning && remainning > 0 && (i != args[:cron_period].to_i - 1)
     end
   end
 end
