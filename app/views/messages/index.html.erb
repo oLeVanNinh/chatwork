@@ -1,6 +1,10 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Messages</h1>
+
+<div class="message-title">
+  <h1>Messages</h1>
+  <h4 class="text-success"><%= Service::Chatwork.current_user_name %></h4>
+</div>
 
 <table class="table table-bordered">
   <thead>

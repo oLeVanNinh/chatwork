@@ -27,3 +27,14 @@ select {
 .button-delete {
   width: 20px;
 }
+
+.message-title {
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+  align-items: center;
+
+  h4 {
+    margin-bottom: 10px;
+  }
+}

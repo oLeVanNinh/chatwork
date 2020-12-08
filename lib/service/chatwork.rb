@@ -55,12 +55,18 @@ module Service
         import_room_data(response) if response.code == 200
       end
 
+      def current_user_name
+        Rails.cache.read(current_account_id)
+      end
+
       private
 
       def import_room_data(response)
         room_data = response["result"]["room_dat"]
         contact_data = response["result"]["contact_dat"]
         account_id = current_account_id
+
+        Rails.cache.write(current_account_id, contact_data[account_id]["name"])
 
         room_data.each do |room_id, room_info|
           room = Room.find_or_initialize_by(room_id: room_id)

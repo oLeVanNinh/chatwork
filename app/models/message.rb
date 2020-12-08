@@ -26,6 +26,7 @@ class Message < ApplicationRecord
 
   validates :content, presence: true
   validates :delivery_at, presence: true
+  validate :deliver_time_in_the_future
 
   enumerize :status, in: { unsent: 0, sended: 1, fail: 2 }
 
@@ -36,5 +37,10 @@ class Message < ApplicationRecord
   def destroy_job_schedule
     jobs = Sidekiq::ScheduledSet.new.select { |schuled| schuled.jid == job_id }
     jobs.each(&:delete)
+  end
+
+  def deliver_time_in_the_future
+    return if delivery_at > Time.now
+    errors.add(:delivery_at, "Date cannot set in the past")
   end
 end

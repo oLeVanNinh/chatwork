@@ -5,6 +5,7 @@ class MessagesController < ApplicationController
   # GET /messages.json
   def index
     @messages = Message.joins("INNER JOIN rooms on messages.room_id = rooms.id").where(rooms: { user_id: Service::Chatwork.current_account_id })
+                       .order("created_at desc")
   end
 
   # GET /messages/1
