@@ -7,7 +7,8 @@ namespace :scheduler do
       puts "Task running at #{start_time.to_s}"
       puts args
 
-      time_range = Array.new(cron_period) { |i| i.minutes.ago.beginning_of_minute }
+      # setting for interval in heroku is 10 minutes
+      time_range = Array.new(10) { |i| i.minutes.ago.beginning_of_minute }
 
       Sidekiq::ScheduledSet.new.each do |job|
         puts "Starting schuled message at #{Time.now.to_s}"
