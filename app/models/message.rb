@@ -28,7 +28,7 @@ class Message < ApplicationRecord
   validates :delivery_at, presence: true
   validate :deliver_time_in_the_future
 
-  enumerize :status, in: { unsent: 0, sended: 1, fail: 2 }
+  enumerize :status, in: { unsent: 0, processing: 1, sended: 1, fail: 2 }
 
   before_destroy :destroy_job_schedule
 
