@@ -1,12 +1,14 @@
 namespace :scheduler do
   desc "Take for send message schuled every time to replace for sidekiq worker because worker dyno off if no traffic to web dyno"
   task :send_message, [:cron_period] => [:environment] do |task, args|
-    args[:cron_period].to_i.times do |i|
+    cron_period = args[:cron_period].to_i
+    cron_period.times do |i|
       start_time = Time.now
       puts "Task running at #{start_time.to_s}"
       puts args
 
-      time_range = [1.minutes.ago.beginning_of_minute, Time.now.beginning_of_minute]
+      time_range = Array.new(cron_period) { |i| i.minutes.ago.beginning_of_minute }
+
       Sidekiq::ScheduledSet.new.each do |job|
         puts "Starting schuled message at #{Time.now.to_s}"
 
@@ -28,7 +30,7 @@ namespace :scheduler do
       remainning = Time.now.end_of_minute - start_time if Time.now.strftime("%M") == start_time.strftime("%M")
       puts "Waiting for new in task #{remainning} seconds"
       puts "End task at #{Time.now.to_s}"
-      sleep(remainning) if remainning && remainning > 0 && (i != args[:cron_period].to_i - 1)
+      sleep(remainning) if remainning && remainning > 0 && (i != cron_period - 1)
     end
   end
 end
