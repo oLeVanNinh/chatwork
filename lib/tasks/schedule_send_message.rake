@@ -10,10 +10,11 @@ task :send_message => :environment do
       next unless time_range.any? { |time| time == job.at }
       message.update!(status: Message.status.processing)
 
+      puts "Processing message #{message.id}"
+
       job.klass.constantize.new.perform(*job.args)
       job.delete
     rescue StandardError => e
-      Rails.logger.error e.message
       puts e.message
     end
   end
