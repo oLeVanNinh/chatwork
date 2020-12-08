@@ -4,7 +4,7 @@ class CookiesController < ApplicationController
   skip_before_action :authenticate_user!
 
   def update
-    return render json: { status: "fail", message: 'Secret is invalid' } unless ENV["scecret"] != params["secret"]
+    return render json: { status: "fail", message: 'Secret is invalid' } if ENV["secret"] != params["secret"]
 
     cookies_string = params[:cookie_string]
     if cookies_string
