@@ -23,7 +23,7 @@
       <tr>
         <td><%= message.id %></td>
         <td><%= message.content %></td>
-         <td><%= message.room.name %></td>
+         <td><%= link_to message.room.name, "https://www.chatwork.com/#!rid#{message.room.room_id}", target: "_blank",class: "text-info" %></td>
         <td><%= message.delivery_at.strftime("%Y-%m-%d %H:%M") %></td>
         <td><%= message.status %></td>
         <td class="button-delete"><%= button_to 'Destroy', message, method: :delete, class: "btn btn-danger", data: { confirm: 'Are you sure?' } %></td>
