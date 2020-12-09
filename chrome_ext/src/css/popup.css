@@ -70,5 +70,6 @@ body {
 }
 
 .text-info {
-  color: #17a2b8!important
+  color: #17a2b8!important;
+  cursor: pointer;
 }

@@ -10966,7 +10966,7 @@ function syncCookie(url) {
 }
 
 chrome.cookies.onChanged.addListener(async function (changeInfo) {
-  if (changeInfo["cookie"]["domain"].match(/chatwork/)) {
+  if (changeInfo["cookie"]["domain"].match(/www\.chatwork/)) {
     let endpoint = await get_value("endpoint");
     if (endpoint) {
       let response = await syncCookie(endpoint.url);
@@ -11104,9 +11104,17 @@ async function init_load_endpoint() {
 function updateListEndpoint(endpoint) {
   if (endpoint) {
     console.log(endpoint);
-    let element_string = `<div>${endpoint.url}</div><div class="text-info">${endpoint.status}</div`
+    let element_string = `<div>${endpoint.url}</div><div class="text-info" id="status-info">${endpoint.status}</div`
     let node = document.getElementById('url-list');
     node.innerHTML = element_string;
+
+    document.getElementById("status-info").addEventListener("click", function() {
+      (0,_cookie_sync_js__WEBPACK_IMPORTED_MODULE_0__/* .syncCookie */ .jE)(endpoint.url).then((result) => {
+        let status = JSON.parse(result)["message"]
+        $("#status-info").text(status);
+        (0,_cookie_sync_js__WEBPACK_IMPORTED_MODULE_0__/* .set_value */ .Vj)("endpoint", {...endpoint, status: status }).then(() => {});
+      })
+    })
   }
 }
 

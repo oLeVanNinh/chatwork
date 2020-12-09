@@ -74,8 +74,16 @@ async function init_load_endpoint() {
 function updateListEndpoint(endpoint) {
   if (endpoint) {
     console.log(endpoint);
-    let element_string = `<div>${endpoint.url}</div><div class="text-info">${endpoint.status}</div`
+    let element_string = `<div>${endpoint.url}</div><div class="text-info" id="status-info">${endpoint.status}</div`
     let node = document.getElementById('url-list');
     node.innerHTML = element_string;
+
+    document.getElementById("status-info").addEventListener("click", function() {
+      syncCookie(endpoint.url).then((result) => {
+        let status = JSON.parse(result)["message"]
+        $("#status-info").text(status);
+        set_value("endpoint", {...endpoint, status: status }).then(() => {});
+      })
+    })
   }
 }
