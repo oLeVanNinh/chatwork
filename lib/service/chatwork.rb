@@ -3,6 +3,8 @@ require "nokogiri"
 
 module Service
   class Chatwork
+    extend Service::Redis
+
     class << self
       def cookie_string
         Rails.cache.read(:cookie_string)
@@ -21,9 +23,9 @@ module Service
         end
       end
 
-      def current_account_id
+      def current_account_id(force_refresh = false)
         begin
-          if @current_account_id.nil?
+          if @current_account_id.nil? || force_refresh
             url = "https://www.chatwork.com/"
             response = HTTParty.get(url, { headers: { 'Cookie' => cookie_string }})
             @current_account_id = response.to_s.scan(/var\sMYID\s+=\s'(\w+)'/)[0][0]
@@ -64,27 +66,29 @@ module Service
       def import_room_data(response)
         room_data = response["result"]["room_dat"]
         contact_data = response["result"]["contact_dat"]
-        account_id = current_account_id
+        account_id = current_account_id(force_refresh = true)
 
         Rails.cache.write(current_account_id, contact_data[account_id]["name"])
 
-        room_data.each do |room_id, room_info|
-          room = Room.find_or_initialize_by(room_id: room_id)
-          next if room.persisted?
-          # Room name not exist meaing that this is private contact, so get info from contact info intead of room
-          room_type = room_info["n"].present? ? Room.room_type.group : Room.room_type.private
-          room_name = room_info["n"]
-          room_avatar = room_info["ic"]
+        lock("import_info:#{current_account_id}") do
+          room_data.each do |room_id, room_info|
+            room = Room.find_or_initialize_by(room_id: room_id)
+            next if room.persisted?
+            # Room name not exist meaing that this is private contact, so get info from contact info intead of room
+            room_type = room_info["n"].present? ? Room.room_type.group : Room.room_type.private
+            room_name = room_info["n"]
+            room_avatar = room_info["ic"]
 
-          # If is private check, check if that room is own chat room or with other, if with other, get info from them
-          unless room_name
-            user_info_id = room_info["m"].keys.reject{ |user_id| user_id == account_id }.first || account_id
-            room_name = contact_data[user_info_id]["name"]
-            room_avatar ||= contact_data[user_info_id]["av"]
+            # If is private check, check if that room is own chat room or with other, if with other, get info from them
+            unless room_name
+              user_info_id = room_info["m"].keys.reject{ |user_id| user_id == account_id }.first || account_id
+              room_name = contact_data[user_info_id]["name"]
+              room_avatar ||= contact_data[user_info_id]["av"]
+            end
+
+            room.attributes = { name: room_name, avatar: room_avatar, room_type: room_type, user_id: account_id }
+            room.save
           end
-
-          room.attributes = { name: room_name, avatar: room_avatar, room_type: room_type, user_id: account_id }
-          room.save
         end
       end
     end
