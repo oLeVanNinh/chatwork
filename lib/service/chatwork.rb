@@ -51,7 +51,7 @@ module Service
       def get_init_info
         url = "https://www.chatwork.com/gateway/init_load.php"
         body = {
-          "_t": access_token
+          "_t": access_token(true)
         }
 
         HTTParty.post(url, body: body, headers: { 'Cookie': cookie_string })
