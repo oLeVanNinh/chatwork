@@ -1,6 +1,13 @@
 class ApplicationController < ActionController::Base
-  before_action :authenticate_user!
-  before_action :authenticated_chatwork_user
+  # before_action :authenticate_user!
+  # before_action :authenticated_chatwork_user
+
+  def all
+    Rails.logger.info "---------------- request ------------------"
+    Rails.logger.info params.inspect
+    Rails.logger.info "---------------- end      -----------------"
+    render plain: :ok
+  end
 
   private
 
